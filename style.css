@@ -1,0 +1,45 @@
+* {
+  box-sizing: border-box;
+}
+html, body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  height: 100%;
+}
+#navbar {
+  width: 100%;
+  background-color: #49769e;
+  color: rgb(231, 240, 240);
+  padding: 20px 20px;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  letter-spacing: 2px;
+  font-size: 26px;
+  font-weight: bold;
+  text-align: center;
+}
+#infoPanel {
+  position: absolute;
+  width: 40%;
+  bottom: 60px;
+  right: 30px;
+  z-index: 99;
+  background: white;
+  box-shadow: 0 0 8px rgba(0,0,0,0.3);
+  font-family: Arial, sans-serif;
+  max-width: 240px;
+  text-align: left;
+  padding: 20px 20px;
+}
+#viewDiv {
+  height: calc(100% - 70px);
+}
+.legend-marker {
+  display: inline-block;
+  width: 13px;
+  height: 13px;
+  background-color: rgb(35, 66, 92);
+  border-radius: 50%;
+  margin-right: 6px;
+  border: 4px solid rgba(35, 66, 92, 0.5);
+}
