@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Pakistan Landmarks - ArcGIS JS Map</title>
+  <link
+    rel="stylesheet"
+    href="https://js.arcgis.com/4.29/esri/themes/light/main.css"
+  />
+  <script src="https://js.arcgis.com/4.29/"></script>
+
+  <style>
+    *{
+      box-sizing: border-box;
+    }
+    html, body{
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+      height: 100%;
+     
+    }
+    #navbar {
+      width: 100%; /* ✅ exact viewport width */
+      background-color: #49769e;
+      color: rgb(231, 240, 240);
+      padding: 20px 20px;
+      font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+      letter-spacing: 2px;
+      font-size: 26px;
+      font-weight: bold;
+      text-align: center;
+    }
+    #infoPanel {
+      position: absolute;
+      width: 40%;
+      bottom: 60px; /* ✅ below navbar */
+      right: 30px;
+      z-index: 99;
+      background: white;
+      
+      box-shadow: 0 0 8px rgba(0,0,0,0.3);
+      font-family: Arial, sans-serif;
+      max-width: 240px;
+      text-align: left;
+      padding: 20px 20px;
+    }
+    #viewDiv {
+      height: calc(100% - 70px); 
+    }
+  </style>
+
+  
+</head>
+<body>
+  <nav id="navbar">
+  <div class="nav-title">Pakistan Landmarks Map</div>
+  </nav>
+  <div id="infoPanel">
+    <h3>Legend</h3>
+      <p>
+        <span style="display:inline-block; width:13px; height:13px; background-color:rgb(35, 66, 92); border-radius:50%; margin-right:6px;"></span>
+        Landmark Points
+      </p>
+    
+  </div>
+  <div id="viewDiv"></div>
+  <script>
+    require([
+      "esri/Map",
+      "esri/views/MapView",
+      "esri/Graphic",
+      "esri/layers/GraphicsLayer"
+    ], function (Map, MapView, Graphic, GraphicsLayer) {
+      
+      const map = new Map({
+        basemap: "streets-navigation-vector"
+      });
+
+      const view = new MapView({
+        container: "viewDiv",
+        map: map,
+        center: [70.0, 30.0], // Center on Pakistan
+        zoom: 5.5
+      });
+
+      const graphicsLayer = new GraphicsLayer();
+      map.add(graphicsLayer);
+
+      // List of landmark points
+      const points = [
+        { name: "Faisal Mosque", coords: [73.0408, 33.7294], description: "The largest mosque in Pakistan, located in Islamabad." },
+        { name: "Daman-e-Koh", coords: [73.0486, 33.7505], description: "A viewpoint in the Margalla Hills." },
+        { name: "Pakistan Monument", coords: [73.0691, 33.6938], description: "A national symbol representing unity." },
+        { name: "Minar-e-Pakistan", coords: [74.3090, 31.5925], description: "The site where the Pakistan Resolution was passed." },
+        { name: "Badshahi Mosque", coords: [74.3089, 31.5889], description: "One of the world's largest mosques." },
+        { name: "Lahore Fort", coords: [74.3137, 31.5895], description: "A historic Mughal fort near Badshahi Mosque." },
+        { name: "Shalimar Gardens", coords: [74.3587, 31.5886], description: "Mughal-era garden and UNESCO site." },
+        { name: "Mazar-e-Quaid", coords: [67.0167, 24.8731], description: "The resting place of Muhammad Ali Jinnah." },
+        { name: "Clifton Beach", coords: [66.9978, 24.8036], description: "A popular public beach in Karachi." },
+        { name: "Mohenjo-daro", coords: [68.1386, 27.3294], description: "Ancient city of the Indus Valley Civilization." },
+        { name: "Makli Necropolis", coords: [67.9233, 24.7474], description: "One of the largest funerary sites in the world." },
+        { name: "Ziarat Residency", coords: [67.7264, 30.3827], description: "Quaid-e-Azam's summer residence." },
+        { name: "Hingol National Park", coords: [65.4890, 25.5130], description: "Park famous for rock formations like 'Princess of Hope'." },
+        { name: "Lake Saif-ul-Malook", coords: [73.7000, 35.5562], description: "A stunning alpine lake surrounded by mountains." },
+        { name: "Baltit Fort", coords: [74.6833, 36.3267], description: "Historic fort in Hunza Valley." },
+        { name: "Khunjerab Pass", coords: [75.3975, 36.8502], description: "The highest border crossing between Pakistan and China." },
+        { name: "Ratti Gali Lake", coords: [74.2240, 34.8456], description: "Glacial lake in Neelum Valley, Azad Kashmir." },
+        { name: "Rohtas Fort", coords: [73.5822, 32.9555], description: "A UNESCO World Heritage Site, built by Sher Shah Suri near Jhelum." },
+        { name: "Noor Mahal", coords: [71.6786, 29.3958], description: "A beautiful palace in Bahawalpur built in 1872." },
+        { name: "Derawar Fort", coords: [71.3298, 27.5313], description: "A massive fortress in the Cholistan Desert." },
+        { name: "Siri Paye Meadows", coords: [73.4206, 35.0105], description: "Alpine meadows located in Shogran, Kaghan Valley." },
+        { name: "Naltar Valley", coords: [74.2087, 36.0883], description: "A scenic valley known for skiing and natural beauty near Gilgit." },
+        { name: "Rakaposhi View Point", coords: [74.6369, 36.1988], description: "Famous spot for viewing the majestic Rakaposhi peak." },
+        { name: "Sheesh Mahal", coords: [74.3151, 31.5895], description: "The Palace of Mirrors, located within Lahore Fort." },
+        { name: "Sufi Shrine of Shah Rukn-e-Alam", coords: [71.5427, 30.1978], description: "Famous Sufi saint's tomb in Multan." },
+        { name: "Katas Raj Temples", coords: [72.9900, 32.7200], description: "Historic Hindu temples complex near Chakwal." },
+        { name: "Manthoka Waterfall", coords: [75.4286, 33.8533], description: "A beautiful waterfall in Kharmang Valley, Gilgit-Baltistan." }
+      ];
+
+      // Add each point to the map
+      points.forEach(function (point) {
+        const pointGraphic = new Graphic({
+          geometry: {
+            type: "point",
+            longitude: point.coords[0],
+            latitude: point.coords[1]
+          },
+          symbol: {
+            type: "simple-marker",
+            color: "rgb(35, 66, 92)", // bright yellow core
+            size: 10,
+            outline: {
+              color: "rgba(35, 66, 92, 0.5)", // soft yellow glow
+              width: 4
+            }
+          },
+          attributes: {
+            Name: point.name,
+            Description: point.description
+          },
+          popupTemplate: {
+            title: "{Name}",
+            content: "{Description}"
+          }
+        });
+        graphicsLayer.add(pointGraphic);
+      });
+
+    
+    });
+  </script>
+</body>
+</html>
